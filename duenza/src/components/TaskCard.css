@@ -1,0 +1,316 @@
+.task-card {
+  background: linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp 0.4s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.task-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3px;
+  height: 100%;
+  background: rgba(255,255,255,0.1);
+  transition: background 0.3s ease;
+}
+
+.task-card:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+  border-color: rgba(255,255,255,0.15);
+}
+
+.task-card:hover::before {
+  background: rgba(255,255,255,0.3);
+}
+
+.task-card.urgent {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+  border-color: rgba(245, 158, 11, 0.2);
+}
+
+.task-card.urgent::before {
+  background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);
+  width: 4px;
+}
+
+.task-card.overdue {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.05) 100%);
+  border-color: rgba(239, 68, 68, 0.2);
+}
+
+.task-card.overdue::before {
+  background: linear-gradient(180deg, #ef4444 0%, #dc2626 100%);
+  width: 4px;
+}
+
+.task-card.deleting {
+  opacity: 0;
+  transform: translateX(20px) scale(0.95);
+  transition: all 0.3s ease;
+}
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+  gap: 12px;
+}
+
+.task-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  flex: 1;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.4);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.delete-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #f87171;
+  transform: scale(1.1);
+  opacity: 1;
+}
+
+.task-details {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.task-subject {
+  font-size: 12px;
+  color: rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.1);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.task-subject:hover {
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.2);
+}
+
+.task-priority {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+}
+
+.task-priority:hover {
+  transform: scale(1.05);
+}
+
+.task-deadline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+}
+
+.task-deadline svg {
+  color: rgba(255,255,255,0.4);
+  transition: color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.task-deadline:hover svg {
+  color: rgba(255,255,255,0.7);
+}
+
+.urgent-badge {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.3) 0%, rgba(245, 158, 11, 0.2) 100%);
+  color: #fbbf24;
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  animation: pulse 2s infinite;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.urgent-badge::before {
+  content: '⚡';
+  font-size: 8px;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.overdue-badge {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.3) 0%, rgba(239, 68, 68, 0.2) 100%);
+  color: #f87171;
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.overdue-badge::before {
+  content: '⚠';
+  font-size: 8px;
+}
+
+/* Task completion animation */
+.task-card.completed {
+  opacity: 0.6;
+  transform: scale(0.98);
+}
+
+.task-card.completed .task-name {
+  text-decoration: line-through;
+  color: rgba(255,255,255,0.4);
+}
+
+/* Hover effects for interactive elements */
+.task-card:hover .task-subject {
+  background: rgba(255,255,255,0.15);
+  border-color: rgba(255,255,255,0.2);
+}
+
+.task-card:hover .delete-btn {
+  opacity: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .task-card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+  
+  .task-name {
+    font-size: 15px;
+  }
+  
+  .task-details {
+    gap: 8px;
+  }
+  
+  .task-subject,
+  .task-priority {
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+  
+  .task-deadline {
+    font-size: 12px;
+    gap: 6px;
+  }
+  
+  .urgent-badge,
+  .overdue-badge {
+    font-size: 9px;
+    padding: 2px 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .task-card {
+    padding: 14px;
+    border-radius: 10px;
+  }
+  
+  .task-header {
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .task-name {
+    font-size: 14px;
+  }
+  
+  .task-details {
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  
+  .task-subject,
+  .task-priority {
+    font-size: 10px;
+    padding: 2px 6px;
+  }
+  
+  .task-deadline {
+    font-size: 11px;
+    gap: 4px;
+  }
+  
+  .task-deadline svg {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .delete-btn {
+    padding: 4px;
+  }
+  
+  .delete-btn svg {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .urgent-badge,
+  .overdue-badge {
+    font-size: 8px;
+    padding: 2px 5px;
+  }
+}
