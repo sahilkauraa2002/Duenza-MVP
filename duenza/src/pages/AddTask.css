@@ -135,6 +135,7 @@
 }
 
 .form-group input[type="text"],
+.form-group input[type="date"],
 .form-group input[type="datetime-local"] {
   width: 100%;
   padding: 16px;
@@ -146,6 +147,7 @@
   background: rgba(255,255,255,0.05);
   color: #ffffff;
   backdrop-filter: blur(10px);
+  color-scheme: dark;
 }
 
 .form-group input::placeholder {
@@ -345,6 +347,7 @@
   }
   
   .form-group input[type="text"],
+  .form-group input[type="date"],
   .form-group input[type="datetime-local"] {
     padding: 14px;
     font-size: 15px;
@@ -401,6 +404,7 @@
   }
   
   .form-group input[type="text"],
+  .form-group input[type="date"],
   .form-group input[type="datetime-local"] {
     padding: 12px;
     font-size: 14px;
@@ -436,6 +440,7 @@
   }
   
   .form-group input[type="text"],
+  .form-group input[type="date"],
   .form-group input[type="datetime-local"] {
     padding: 10px;
   }

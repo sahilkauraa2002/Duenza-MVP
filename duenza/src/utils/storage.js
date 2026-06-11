@@ -1,30 +1,103 @@
-const TASKS_KEY = 'duenza_tasks'
+import { supabase } from '../supabase'
+
 const USER_KEY = 'duenza_user'
 const STUDENT_PROFILE_KEY = 'duenza_student_profile'
 const NOTIFICATION_PREFERENCES_KEY = 'duenza_notification_preferences'
 
-export const getTasks = () => {
-  const tasks = localStorage.getItem(TASKS_KEY)
-  return tasks ? JSON.parse(tasks) : []
-}
+// ─── Task Functions (Supabase) ───────────────────────────────────────────────
 
-export const saveTask = (task) => {
-  const tasks = getTasks()
-  const newTask = {
-    ...task,
-    id: Date.now(),
-    createdAt: new Date().toISOString()
+export const getTasks = async () => {
+  const { data, error } = await supabase
+    .from('tasks')
+    .select('*')
+    .order('deadline', { ascending: true })
+
+  if (error) {
+    console.error('Error fetching tasks:', error)
+    return []
   }
-  tasks.push(newTask)
-  localStorage.setItem(TASKS_KEY, JSON.stringify(tasks))
-  return newTask
+
+  // Map Supabase columns to app field names
+  return (data || []).map(task => ({
+    id: task.id,
+    name: task.task_name,
+    subject: task.subject,
+    deadline: task.deadline,
+    priority: task.priority,
+    createdAt: task.created_at
+  }))
 }
 
-export const deleteTask = (taskId) => {
-  const tasks = getTasks()
-  const filteredTasks = tasks.filter(task => task.id !== taskId)
-  localStorage.setItem(TASKS_KEY, JSON.stringify(filteredTasks))
+export const saveTask = async (task) => {
+  const insertData = {
+    task_name: task.name,
+    subject: task.subject,
+    deadline: task.deadline,
+    priority: task.priority
+  }
+
+  console.log('Inserting into tasks table:', insertData)
+
+  const { data, error } = await supabase
+    .from('tasks')
+    .insert([insertData])
+    .select()
+    .single()
+
+  if (error) {
+    console.error('Supabase insert error:', JSON.stringify(error, null, 2))
+    throw error
+  }
+
+  // Map back to app field names
+  return {
+    id: data.id,
+    name: data.task_name,
+    subject: data.subject,
+    deadline: data.deadline,
+    priority: data.priority,
+    createdAt: data.created_at
+  }
 }
+
+export const deleteTask = async (taskId) => {
+  const { error } = await supabase
+    .from('tasks')
+    .delete()
+    .eq('id', taskId)
+
+  if (error) {
+    console.error('Error deleting task:', error)
+    throw error
+  }
+}
+
+export const getUrgentTasks = async () => {
+  const tasks = await getTasks()
+  const now = new Date()
+  const twoDaysFromNow = new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000)
+
+  return tasks.filter(task => {
+    const deadline = new Date(task.deadline)
+    return deadline <= twoDaysFromNow && deadline >= now
+  })
+}
+
+export const getOverdueTasks = async () => {
+  const tasks = await getTasks()
+  const now = new Date()
+
+  return tasks.filter(task => {
+    const deadline = new Date(task.deadline)
+    return deadline < now
+  })
+}
+
+export const sortTasksByDeadline = (tasks) => {
+  return [...tasks].sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
+}
+
+// ─── User Functions (localStorage — unchanged) ──────────────────────────────
 
 export const getUser = () => {
   const user = localStorage.getItem(USER_KEY)
@@ -50,31 +123,6 @@ export const saveStudentProfile = (profile) => {
 
 export const clearStudentProfile = () => {
   localStorage.removeItem(STUDENT_PROFILE_KEY)
-}
-
-export const getUrgentTasks = () => {
-  const tasks = getTasks()
-  const now = new Date()
-  const twoDaysFromNow = new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000)
-  
-  return tasks.filter(task => {
-    const deadline = new Date(task.deadline)
-    return deadline <= twoDaysFromNow && deadline >= now
-  })
-}
-
-export const getOverdueTasks = () => {
-  const tasks = getTasks()
-  const now = new Date()
-  
-  return tasks.filter(task => {
-    const deadline = new Date(task.deadline)
-    return deadline < now
-  })
-}
-
-export const sortTasksByDeadline = (tasks) => {
-  return [...tasks].sort((a, b) => new Date(a.deadline) - new Date(b.deadline))
 }
 
 // Notification Preferences Functions

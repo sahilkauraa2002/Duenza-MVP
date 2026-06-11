@@ -13,9 +13,9 @@ function Reminders() {
     loadReminders()
   }, [])
 
-  const loadReminders = () => {
-    const urgent = sortTasksByDeadline(getUrgentTasks())
-    const overdue = sortTasksByDeadline(getOverdueTasks())
+  const loadReminders = async () => {
+    const urgent = sortTasksByDeadline(await getUrgentTasks())
+    const overdue = sortTasksByDeadline(await getOverdueTasks())
     setUrgentTasks(urgent)
     setOverdueTasks(overdue)
   }

@@ -10,6 +10,7 @@ function AddTask() {
     deadline: '',
     priority: 'medium'
   })
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const navigate = useNavigate()
 
   const handleChange = (e) => {
@@ -21,14 +22,22 @@ function AddTask() {
     }))
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     console.log('Form submitted:', formData)
-    if (formData.name && formData.subject && formData.deadline) {
-      console.log('Saving task...')
-      const savedTask = saveTask(formData)
-      console.log('Task saved:', savedTask)
-      navigate('/confirmation')
+    if (formData.name && formData.subject && formData.deadline && !isSubmitting) {
+      setIsSubmitting(true)
+      try {
+        console.log('Saving task...')
+        const savedTask = await saveTask(formData)
+        console.log('Task saved:', savedTask)
+        navigate('/confirmation')
+      } catch (error) {
+        console.error('Failed to save task:', error)
+        alert('Failed to save task: ' + (error.message || 'Unknown error'))
+      } finally {
+        setIsSubmitting(false)
+      }
     } else {
       console.log('Form validation failed')
     }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getTasks, sortTasksByDeadline, getUrgentTasks, getOverdueTasks, getUser, clearUser, getStudentProfile } from '../utils/storage'
+import { getTasks, sortTasksByDeadline, getUser, clearUser, getStudentProfile } from '../utils/storage'
 import TaskCard from '../components/TaskCard'
 import './Dashboard.css'
 
@@ -20,8 +20,8 @@ function Dashboard() {
     filterTasks()
   }, [tasks, filter])
 
-  const loadTasks = () => {
-    const allTasks = getTasks()
+  const loadTasks = async () => {
+    const allTasks = await getTasks()
     const sortedTasks = sortTasksByDeadline(allTasks)
     setTasks(sortedTasks)
   }
@@ -63,8 +63,16 @@ function Dashboard() {
     navigate('/')
   }
 
-  const urgentCount = getUrgentTasks().length
-  const overdueCount = getOverdueTasks().length
+  const now = new Date()
+  const twoDaysFromNow = new Date(now.getTime() + 2 * 24 * 60 * 60 * 1000)
+  const urgentCount = tasks.filter(task => {
+    const deadline = new Date(task.deadline)
+    return deadline <= twoDaysFromNow && deadline >= now
+  }).length
+  const overdueCount = tasks.filter(task => {
+    const deadline = new Date(task.deadline)
+    return deadline < now
+  }).length
   const totalTasks = tasks.length
   const completedTasks = tasks.filter(task => new Date(task.deadline) < new Date()).length
   const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0

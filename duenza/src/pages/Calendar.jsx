@@ -14,8 +14,8 @@ function Calendar() {
     loadTasks()
   }, [])
 
-  const loadTasks = () => {
-    const allTasks = getTasks()
+  const loadTasks = async () => {
+    const allTasks = await getTasks()
     const sortedTasks = sortTasksByDeadline(allTasks)
     setTasks(sortedTasks)
   }

@@ -40,12 +40,15 @@ function TaskCard({ task, onDelete, showDelete = true }) {
     })
   }
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     setIsDeleting(true)
-    setTimeout(() => {
-      deleteTask(task.id)
+    try {
+      await deleteTask(task.id)
       if (onDelete) onDelete(task.id)
-    }, 300)
+    } catch (error) {
+      console.error('Failed to delete task:', error)
+      setIsDeleting(false)
+    }
   }
 
   const priorityColors = getPriorityColor(task.priority)
